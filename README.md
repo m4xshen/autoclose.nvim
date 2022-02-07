@@ -1,2 +1,2 @@
 # autoclose.nvim
-An autoclose plugin for neovim written in lua.
+An minimum autoclose plugin for neovim written in lua.
