@@ -1,0 +1,5 @@
+vim.api.nvim_set_keymap("i", "{", "{}<ESC>i", {noremap = true})
+vim.api.nvim_set_keymap("i", "[", "[]<ESC>i", {noremap = true})
+vim.api.nvim_set_keymap("i", "(", "()<ESC>i", {noremap = true})
+vim.api.nvim_set_keymap("i", "'", "''<ESC>i", {noremap = true})
+vim.api.nvim_set_keymap("i", "\"", "\"\"<ESC>i", {noremap = true})
