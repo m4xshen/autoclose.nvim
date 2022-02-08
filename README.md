@@ -1,4 +1,8 @@
-# autoclose.nvim
+<h1 align="center">autoclose.nvim</h1>
+
+<p align="center">
+  <img src="https://github.com/max-0406/autoclose.nvim/blob/main/screenshot.gif" width="500">
+</p>
 
 ## 📃 Introduction
 
