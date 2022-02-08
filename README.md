@@ -12,14 +12,3 @@ Install via package manager
 " Using Vim-Plug:
 Plug 'max-0406/autoclose.nvim'
 ```
-## 🔧 Usage
-
-Enable the plugin in your neovim config file.
-```VimL
-" init.vim:
-lua require("autoclose")
-```
-```Lua
--- init.lua:
-require("autoclose")
-```
