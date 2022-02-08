@@ -2,7 +2,8 @@
 
 ## 📃 Introduction
 
-An minimum autoclose plugin for neovim written in lua.
+An minimalist autoclose plugin for [neovim](https://neovim.io/) written in lua.
+
 
 ## 📦 Installation
 
