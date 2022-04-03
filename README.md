@@ -6,13 +6,25 @@
 
 ## 📃 Introduction
 
-A minimalist autoclose plugin for [neovim](https://neovim.io/) written in lua.
+A minimalist autoclose plugin for [Neovim](https://neovim.io/) written in lua.
 
 
 ## 📦 Installation
 
-Install via package manager
+Install via your favorite package manager
+- [vim-plug](https://github.com/junegunn/vim-plug)
 ```VimL
-" Using Vim-Plug:
 Plug 'max-0406/autoclose.nvim'
+```
+
+- [packer.nvim](https://github.com/wbthomason/packer.nvim)
+```Lua
+use 'max-0406/autoclose.nvim'
+```
+
+- [paq](https://github.com/savq/paq-nvim)
+```Lua
+require "paq" {
+    "max-0406/autoclose.nvim";
+}
 ```
