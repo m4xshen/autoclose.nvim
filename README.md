@@ -6,7 +6,7 @@
 
 ## 📃 Introduction
 
-A minimalist autoclose plugin for [Neovim](https://neovim.io/) written by lua.
+A minimalist autoclose plugin for [Neovim](https://neovim.io/) written by Lua.
 
 
 ## 📦 Installation
