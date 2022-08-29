@@ -2,11 +2,12 @@ local M = {}
 
 M.delete = function (text)
     return text == "{" or 
-	   text == "[" or
-	   text == "(" or
-	   text == "<" or
-	   text == "\"" or
-	   text == "'"
+	text == "[" or
+	text == "(" or
+	text == "<" or
+	text == "\"" or
+	text == "'" or
+	text == "`"
 end
 
 M.pair = function (text)
@@ -16,6 +17,7 @@ M.pair = function (text)
     elseif text == "<" then return ">"
     elseif text == "\"" then return "\""
     elseif text == "'" then return "'"
+    elseif text == "`" then return "`"
     else return nil
     end
 end

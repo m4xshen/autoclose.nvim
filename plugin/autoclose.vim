@@ -11,8 +11,8 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 lua autoclose = require("autoclose")
-lua autoclose.auto_close()
-autocmd CursorMovedI,CursorMoved * :lua autoclose.auto_delete()
+lua autoclose.close()
+autocmd CursorMoved,CursorMovedI * :lua autoclose.deleteAndIndent()
 
 let g:loaded_autoclose = 1
 
