@@ -37,8 +37,8 @@ A minimalist autoclose plugin for [Neovim](https://neovim.io/) written in Lua.
 
 <img src="https://github.com/m4xshen/autoclose.nvim/blob/main/assets/delete.gif" width="500">
 
-### Auto-indent
-  <img src="https://github.com/m4xshen/autoclose.nvim/blob/main/assets/indent.gif" width="500">
+### Auto-indent And Escape
+  <img src="https://github.com/m4xshen/autoclose.nvim/blob/main/assets/indentAndEscape.gif" width="500">
 
 ## 📦 Installation
 
