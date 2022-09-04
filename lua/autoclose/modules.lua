@@ -10,6 +10,15 @@ M.delete = function (text)
 	text == "`"
 end
 
+M.escape = function (text)
+    return text == "}" or 
+	text == "]" or
+	text == ")" or
+	text == ">" or
+	text == "\"" or
+	text == "'"
+end
+
 M.pair = function (text)
     if text == "{" then return "}"
     elseif text == "[" then return "]"

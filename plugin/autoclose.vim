@@ -13,6 +13,7 @@ set cpo&vim
 lua autoclose = require("autoclose")
 lua autoclose.close()
 autocmd CursorMoved,CursorMovedI * :lua autoclose.deleteAndIndent()
+autocmd TextChangedI * :lua autoclose.escape()
 
 let g:loaded_autoclose = 1
 

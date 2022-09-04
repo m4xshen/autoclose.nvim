@@ -28,4 +28,20 @@ M.deleteAndIndent = function()
     end
 end
 
+M.escape = function()
+    local col = vim.fn.getpos(".")[3]
+
+    local cursor_line = vim.api.nvim_get_current_line()
+    local input = string.sub(cursor_line, col - 1, col - 1)
+    local cursor_position = string.sub(cursor_line, col, col)
+
+    if modules.escape(input) and input == cursor_position then
+	if col == string.len(cursor_line) then
+	    vim.api.nvim_command("normal r ")
+	else
+	    vim.api.nvim_command('normal "_x')
+	end
+    end
+end
+
 return M
