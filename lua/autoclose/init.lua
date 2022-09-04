@@ -8,8 +8,8 @@ M.close = function()
     map("i", "[", "[]<ESC>i", {noremap = true})
     map("i", "(", "()<ESC>i", {noremap = true})
     map("i", "`", "``<ESC>i", {noremap = true})
-    map("i", "'", "''<ESC>i", {noremap = true})
-    map("i", "\"", "\"\"<ESC>i", {noremap = true})
+    --map("i", "'", "''<ESC>i", {noremap = true})
+    --map("i", "\"", "\"\"<ESC>i", {noremap = true})
 end
 
 M.deleteAndIndent = function()
@@ -35,11 +35,19 @@ M.escape = function()
     local input = string.sub(cursor_line, col - 1, col - 1)
     local cursor_position = string.sub(cursor_line, col, col)
 
+    --print(input .. cursor_position)
+    if input ~= cursor_position then
+	if input == '"' then
+	    vim.api.nvim_command('normal i"')
+	elseif input == "'" then
+	    vim.api.nvim_command("normal i'")
+	end
+    end
+
     if modules.escape(input) and input == cursor_position then
+	vim.api.nvim_command('normal "_x')
 	if col == string.len(cursor_line) then
-	    vim.api.nvim_command("normal r ")
-	else
-	    vim.api.nvim_command('normal "_x')
+	    vim.api.nvim_command("startinsert!")
 	end
     end
 end
