@@ -53,9 +53,7 @@ Plug 'm4xshen/autoclose.nvim'
 use 'm4xshen/autoclose.nvim'
 ```
 
-- [paq](https://github.com/savq/paq-nvim)
+Remember to setup the plugin.
 ```Lua
-require "paq" {
-    "m4xshen/autoclose.nvim";
-}
+require "autoclose".setup {}
 ```
