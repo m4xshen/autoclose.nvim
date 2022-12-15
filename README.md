@@ -25,24 +25,24 @@ autoclose.nvim
   
 ## 📃 Introduction
   
-A minimalist autoclose plugin for [Neovim](https://neovim.io/) written in Lua. 
+A minimalist autoclose plugin for [Neovim](https://neovim.io/) written in 100% Lua. 
 
 ## ⚙️ Functions
 
-### Auto-close `{}` `[]` `()` `""` `''` ``` `` ```
+### Auto-close
 
 <img src="https://github.com/m4xshen/autoclose.nvim/blob/main/assets/close.gif" width="500">
 
-### Auto-delete `{}` `[]` `()` `""` `''` ``` `` ``` `<>`
+### Auto-delete
 
 <img src="https://github.com/m4xshen/autoclose.nvim/blob/main/assets/delete.gif" width="500">
 
-### Auto-indent And Escape
+### Auto-escape And indent
   <img src="https://github.com/m4xshen/autoclose.nvim/blob/main/assets/indentAndEscape.gif" width="500">
 
 ## 📦 Installation
 
-Install via your favorite package manager.
+1. Install via your favorite package manager.
 - [vim-plug](https://github.com/junegunn/vim-plug)
 ```VimL
 Plug 'm4xshen/autoclose.nvim'
@@ -53,7 +53,45 @@ Plug 'm4xshen/autoclose.nvim'
 use 'm4xshen/autoclose.nvim'
 ```
 
-Remember to setup the plugin.
+2. Setup the plugin in your `init.lua`.
 ```Lua
-require "autoclose".setup {}
+require("autoclose").setup({})
+```
+
+## 🔧 Configuration
+
+You can pass your config table into the `setup()` function.
+
+Example: Add a `$$` pair.
+```Lua
+require("autoclose").setup({
+  ["$"] = { escape = true, close = true, pair = "$$"},
+})
+```
+
+You can also overwrite the default config.
+
+Example: Remove the escape function of `>`.
+```Lua
+require("autoclose").setup({
+  [">"] = { escape = false, close = false, pair = "<>"},
+})
+```
+
+Here is the default config:
+```Lua
+local config = {
+   ["("] = { escape = false, close = true, pair = "()"},
+   ["["] = { escape = false, close = true, pair = "[]"},
+   ["{"] = { escape = false, close = true, pair = "{}"},
+
+   [">"] = { escape = true, close = false, pair = "<>"},
+   [")"] = { escape = true, close = false, pair = "()"},
+   ["]"] = { escape = true, close = false, pair = "[]"},
+   ["}"] = { escape = true, close = false, pair = "{}"},
+
+   ['"'] = { escape = true, close = true, pair = '""'},
+   ["'"] = { escape = true, close = true, pair = "''"},
+   ["`"] = { escape = true, close = true, pair = "``"},
+}
 ```
