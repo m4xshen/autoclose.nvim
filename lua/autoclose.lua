@@ -1,116 +1,83 @@
 local M = {}
-local H = {}
 
-M.setup = function()
-  vim.keymap.set('i', '(', '()<Left>')
-  vim.keymap.set('i', '[', '[]<Left>')
-  vim.keymap.set('i', '{', '{}<Left>')
+function M.setup()
+  -- general
+  for key, info in pairs(H.keys) do
+    H.map(key, info)
+  end
 
+  -- <BS>
   vim.keymap.set('i', '<BS>', function()
-    local pair = H.getPair()
+    local pair = H.get_pair()
 
-    if H.isPair(pair) then
+    if H.is_pair(pair) then
       return '<BS><Del>'
     else
       return '<BS>'
     end
   end, { expr = true })
 
+  -- <CR>
   vim.keymap.set('i', '<CR>', function()
-    local pair = H.getPair()
+    local pair = H.get_pair()
 
-    if H.isPair(pair) and (pair.left=='{'
-      or pair.left=='[' or pair.left=='(') then
-      return '<CR><ESC>O'
-    else
-      return '<CR>'
+    for _, info in pairs(H.keys) do
+      if info.is_open and pair == info.pair then
+        return '<CR><ESC>O'
+      end
     end
-  end, { expr = true })
-
-  vim.keymap.set('i', '}', function()
-    local right = H.getPair().right
-
-    if right == '}' then
-      return '<Right>'
-    else
-      return '}'
-    end
-  end, { expr = true })
-
-  vim.keymap.set('i', ']', function()
-    local right = H.getPair().right
-
-    if right == ']' then
-      return '<Right>'
-    else
-      return ']'
-    end
-  end, { expr = true })
-
-  vim.keymap.set('i', ')', function()
-    local right = H.getPair().right
-
-    if right == ')' then
-      return '<Right>'
-    else
-      return ')'
-    end
-  end, { expr = true })
-
-  vim.keymap.set('i', '"', function()
-    local right = H.getPair().right
-
-    if right == '"' then
-      return '<Right>'
-    else
-      return '""<Left>'
-    end
-  end, { expr = true })
-
-  vim.keymap.set('i', "'", function()
-    local right = H.getPair().right
-
-    if right == "'" then
-      return '<Right>'
-    else
-      return "''<Left>"
-    end
-  end, { expr = true })
-
-  vim.keymap.set('i', '`', function()
-    local right = H.getPair().right
-
-    if right == '`' then
-      return '<Right>'
-    else
-      return '``<Left>'
-    end
+    return '<CR>'
   end, { expr = true })
 end
 
-H.getPair = function()
-  local pair = {}
+local H = {}
+
+H.keys = {
+  ['('] = { is_closed = false, is_open = true, pair = '()'},
+  ['['] = { is_closed = false, is_open = true, pair = '[]'},
+  ['{'] = { is_closed = false, is_open = true, pair = '{}'},
+
+  ['>'] = { is_closed = true, is_open = false, pair = '<>'},
+  [')'] = { is_closed = true, is_open = false, pair = '()'},
+  [']'] = { is_closed = true, is_open = false, pair = '[]'},
+  ['}'] = { is_closed = true, is_open = false, pair = '{}'},
+
+  ['"'] = { is_closed = true, is_open = true, pair = '""'},
+  ["'"] = { is_closed = true, is_open = true, pair = "''"},
+  ['`'] = { is_closed = true, is_open = true, pair = '``'}
+}
+
+
+function H.map(key, info)
+  vim.keymap.set('i', key, function()
+    local right = string.sub(H.get_pair(), 2, 2)
+
+    if info.is_closed and right == key then
+      return '<Right>'
+    elseif info.is_open then
+      return info.pair .. '<Left>'
+    else
+      return key
+    end
+  end, { expr = true }
+  )
+end
+
+function H.get_pair()
   local line = vim.api.nvim_get_current_line()
   local col = vim.api.nvim_win_get_cursor(0)[2]
 
-  pair.left = string.sub(line, col, col)
-  pair.right = string.sub(line, col+1, col+1)
-
-  return pair
+  return string.sub(line, col, col+1)
 end
 
-H.isPair = function(pair)
-  if (pair.left == '{' and pair.right == '}') or
-    (pair.left == '[' and pair.right == ']') or
-    (pair.left == '(' and pair.right == ')') or
-    (pair.left == '<' and pair.right == '>') or
-    (pair.left == '"' and pair.right == '"') or
-    (pair.left == "'" and pair.right == "'") or
-    (pair.left == '`' and pair.right == '`') then
-    return true
-  else 
-    return false
+function H.is_pair(pair)
+  for _, info in pairs(H.keys) do
+    if pair == info.pair then
+      return true
+    end
   end
+
+  return false
 end
 
 return M
