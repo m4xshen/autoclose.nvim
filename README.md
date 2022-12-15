@@ -30,15 +30,13 @@ A minimalist autoclose plugin for [Neovim](https://neovim.io/) written in 100% L
 ## ⚙️ Functions
 
 ### Auto-close
-
-<img src="https://github.com/m4xshen/autoclose.nvim/blob/main/assets/close.gif" width="500">
+<img src="https://user-images.githubusercontent.com/74842863/207840883-b31b58d8-a3f9-49d4-a623-75b366662951.gif" width="500"/>
 
 ### Auto-delete
-
-<img src="https://github.com/m4xshen/autoclose.nvim/blob/main/assets/delete.gif" width="500">
+<img src="https://user-images.githubusercontent.com/74842863/207841011-813f368b-fca3-4b9e-b643-4ffc68ba0a7e.gif" width="500"/>
 
 ### Auto-escape And indent
-  <img src="https://github.com/m4xshen/autoclose.nvim/blob/main/assets/indentAndEscape.gif" width="500">
+<img src="https://user-images.githubusercontent.com/74842863/207841074-82dba234-0552-4f7e-b352-c36e0e73b828.gif" width="500"/>
 
 ## 📦 Installation
 
