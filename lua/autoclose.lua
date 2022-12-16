@@ -1,5 +1,6 @@
 local autoclose = {}
 
+-- TODO: use ["()"] as key
 local config = {
    ["("] = { escape = false, close = true, pair = "()"},
    ["["] = { escape = false, close = true, pair = "[]"},
@@ -13,6 +14,9 @@ local config = {
    ['"'] = { escape = true, close = true, pair = '""'},
    ["'"] = { escape = true, close = true, pair = "''"},
    ["`"] = { escape = true, close = true, pair = "``"},
+
+   ["<BS>"] = {},
+   ["<CR>"] = {},
 }
 
 local function get_pair()
@@ -20,7 +24,7 @@ local function get_pair()
    local line = "_" .. vim.api.nvim_get_current_line()
    local col = vim.api.nvim_win_get_cursor(0)[2] + 1
 
-   return string.sub(line, col, col+1)
+   return line:sub(col, col+1)
 end
 
 local function is_pair(pair)
@@ -32,41 +36,20 @@ local function is_pair(pair)
    return false
 end
 
-local function map_general(key, info)
-   for key, info in pairs(config) do
-      vim.keymap.set("i", key, function()
-         if info.escape and string.sub(get_pair(), 2, 2) == key then
-            return "<Right>"
-         elseif info.close then
-            return info.pair .. "<Left>"
-         else
-            return key
-         end
-      end, { expr = true })
+local function handler(key, info)
+   local pair = get_pair()
+
+   if key == "<BS>" and is_pair(pair) then
+      return "<BS><Del>"
+   elseif key == "<CR>" and is_pair(pair) then
+      return "<CR><ESC>O"
+   elseif info.escape and pair:sub(2, 2) == key then
+      return "<Right>"
+   elseif info.close then
+      return info.pair .. "<Left>"
+   else
+      return key
    end
-end
-
-local function map_bs()
-   vim.keymap.set("i", "<BS>", function()
-      if is_pair(get_pair()) then
-         return "<BS><Del>"
-      else
-         return "<BS>"
-      end
-   end, { expr = true })
-end
-
-local function map_cr()
-   vim.keymap.set("i", "<CR>", function()
-      local pair = get_pair()
-
-      for _, info in pairs(config) do
-         if info.close and pair == info.pair then
-            return "<CR><ESC>O"
-         end
-      end
-      return "<CR>"
-   end, { expr = true })
 end
 
 function autoclose.setup(user_config)
@@ -74,9 +57,10 @@ function autoclose.setup(user_config)
       config[key] = info
    end
 
-   map_general()
-   map_bs()
-   map_cr()
+   for key, info in pairs(config) do
+      vim.keymap.set("i", key, function() return handler(key, info) end,
+         { noremap = true, expr = true })
+   end
 end
 
 return autoclose
