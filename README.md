@@ -30,13 +30,20 @@ A minimalist autoclose plugin for [Neovim](https://neovim.io/) written in 100% L
 ## ⚙️ Functions
 
 ### Auto-close
-<img src="https://user-images.githubusercontent.com/74842863/207840883-b31b58d8-a3f9-49d4-a623-75b366662951.gif" width="500"/>
+<img src="https://user-images.githubusercontent.com/74842863/208931426-4f171094-e1c8-4f85-918a-92250d92c933.gif" width="500"/>
 
 ### Auto-delete
-<img src="https://user-images.githubusercontent.com/74842863/207841011-813f368b-fca3-4b9e-b643-4ffc68ba0a7e.gif" width="500"/>
+<img src="https://user-images.githubusercontent.com/74842863/208931458-0ed78f76-0080-4aa9-a36e-e55881090a0c.gif" width="500"/>
 
-### Auto-escape And indent
-<img src="https://user-images.githubusercontent.com/74842863/207841074-82dba234-0552-4f7e-b352-c36e0e73b828.gif" width="500"/>
+### Auto-escape
+<img src="https://user-images.githubusercontent.com/74842863/208931512-6f06036a-267a-42d7-9d3e-58a7ddfab1a6.gif" width="500"/>
+
+### Auto-indent
+<img src="https://user-images.githubusercontent.com/74842863/208931561-b9170d08-0697-49b4-90fb-6d432e03c393.gif" width="500"/>
+
+## ⚡ Requirements
+
+- Neovim >= [v0.7.0](https://github.com/neovim/neovim/releases/tag/v0.7.0)
 
 ## 📦 Installation
 
