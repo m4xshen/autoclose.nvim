@@ -75,10 +75,8 @@ function autoclose.setup(user_config)
       config[key] = info
    end
    for key, info in pairs(config) do
-      vim.keymap.set("i", key, function()
-         return handler(key, info)
-      end,
-      { noremap = true, expr = true })
+      vim.keymap.set("i", key, function() return handler(key, info) end,
+         { noremap = true, expr = true })
    end
 end
 
