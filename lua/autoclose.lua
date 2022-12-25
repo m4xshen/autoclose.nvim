@@ -70,9 +70,6 @@ local function handler(key, info)
    end
 end
 
--- TODO don't forget to make sure it follows the style guidelines
--- that the person in the PR set me to follow (3-space indents mainly)
-
 function autoclose.setup(user_config)
    for key, info in pairs(user_config) do
       config[key] = info
