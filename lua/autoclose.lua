@@ -17,6 +17,8 @@ local config = {
 
    ["<BS>"] = {},
    ["<CR>"] = {},
+
+   disabled_filetypes = { 'markdown' },
 }
 
 local function get_pair()
@@ -57,9 +59,21 @@ function autoclose.setup(user_config)
       config[key] = info
    end
 
-   for key, info in pairs(config) do
-      vim.keymap.set("i", key, function() return handler(key, info) end,
-         { noremap = true, expr = true })
+   local function should_disable_plugin()
+     local current_filetype = vim.bo.filetype
+     for _, disabled_ft in pairs(config.disabled_filetypes) do
+       if (disabled_ft == current_filetype) then
+         return true
+       end
+     end
+     return false
+   end
+
+   if not should_disable_plugin() then
+     for key, info in pairs(config) do
+        vim.keymap.set("i", key, function() return handler(key, info) end,
+           { noremap = true, expr = true })
+     end
    end
 end
 
