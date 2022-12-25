@@ -18,7 +18,7 @@ local config = {
    ["<BS>"] = {},
    ["<CR>"] = {},
 
-   disabled_filetypes = { 'markdown' },
+   disabled_filetypes = { "markdown", "TelescopePrompt" },
 }
 
 local function get_pair()
@@ -30,8 +30,23 @@ local function get_pair()
 end
 
 local function is_pair(pair)
-   for _, info in pairs(config) do
-      if pair == info.pair then
+   for opt, info in pairs(config) do
+      if opt ~= "disabled_filetypes" then
+         if pair == info.pair then
+            return true
+         end
+      end
+   end
+   return false
+end
+
+local function is_disabled()
+   local bo = vim.bo
+   -- If the buffer is read-only, this plugin should be disabled
+   if bo[vim.api.nvim_win_get_buf(0)].readonly == true then return true end
+   local current_filetype = bo.filetype
+   for _, value in pairs(config.disabled_filetypes) do
+      if value == current_filetype then
          return true
       end
    end
@@ -39,6 +54,7 @@ local function is_pair(pair)
 end
 
 local function handler(key, info)
+   if is_disabled() then return key end
    local pair = get_pair()
 
    if key == "<BS>" and is_pair(pair) then
@@ -54,26 +70,18 @@ local function handler(key, info)
    end
 end
 
+-- TODO don't forget to make sure it follows the style guidelines
+-- that the person in the PR set me to follow (3-space indents mainly)
+
 function autoclose.setup(user_config)
    for key, info in pairs(user_config) do
       config[key] = info
    end
-
-   local function should_disable_plugin()
-     local current_filetype = vim.bo.filetype
-     for _, disabled_ft in pairs(config.disabled_filetypes) do
-       if (disabled_ft == current_filetype) then
-         return true
-       end
-     end
-     return false
-   end
-
-   if not should_disable_plugin() then
-     for key, info in pairs(config) do
-        vim.keymap.set("i", key, function() return handler(key, info) end,
-           { noremap = true, expr = true })
-     end
+   for key, info in pairs(config) do
+      vim.keymap.set("i", key, function()
+         return handler(key, info)
+      end,
+      { noremap = true, expr = true })
    end
 end
 
