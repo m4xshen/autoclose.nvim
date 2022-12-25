@@ -98,5 +98,7 @@ local config = {
    ['"'] = { escape = true, close = true, pair = '""'},
    ["'"] = { escape = true, close = true, pair = "''"},
    ["`"] = { escape = true, close = true, pair = "``"},
+
+   disabled_filetypes = { 'markdown' },
 }
 ```
