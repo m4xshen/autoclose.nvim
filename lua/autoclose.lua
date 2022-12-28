@@ -1,22 +1,26 @@
 local autoclose = {}
 
--- TODO: use ["()"] as key
 local config = {
-   ["("] = { escape = false, close = true, pair = "()"},
-   ["["] = { escape = false, close = true, pair = "[]"},
-   ["{"] = { escape = false, close = true, pair = "{}"},
+   keys = {
+      ["("] = { escape = false, close = true, pair = "()"},
+      ["["] = { escape = false, close = true, pair = "[]"},
+      ["{"] = { escape = false, close = true, pair = "{}"},
 
-   [">"] = { escape = true, close = false, pair = "<>"},
-   [")"] = { escape = true, close = false, pair = "()"},
-   ["]"] = { escape = true, close = false, pair = "[]"},
-   ["}"] = { escape = true, close = false, pair = "{}"},
+      [">"] = { escape = true, close = false, pair = "<>"},
+      [")"] = { escape = true, close = false, pair = "()"},
+      ["]"] = { escape = true, close = false, pair = "[]"},
+      ["}"] = { escape = true, close = false, pair = "{}"},
 
-   ['"'] = { escape = true, close = true, pair = '""'},
-   ["'"] = { escape = true, close = true, pair = "''"},
-   ["`"] = { escape = true, close = true, pair = "``"},
+      ['"'] = { escape = true, close = true, pair = '""'},
+      ["'"] = { escape = true, close = true, pair = "''"},
+      ["`"] = { escape = true, close = true, pair = "``"},
 
-   ["<BS>"] = {},
-   ["<CR>"] = {},
+      ["<BS>"] = {},
+      ["<CR>"] = {},
+   },
+   options = {
+      disabled_filetypes = { "text" },
+   },
 }
 
 local function get_pair()
@@ -28,7 +32,7 @@ local function get_pair()
 end
 
 local function is_pair(pair)
-   for _, info in pairs(config) do
+   for _, info in pairs(config.keys) do
       if pair == info.pair then
          return true
       end
@@ -36,7 +40,18 @@ local function is_pair(pair)
    return false
 end
 
+local function is_disabled()
+   local current_filetype = vim.api.nvim_buf_get_option(0, "filetype")
+   for _, filetype in pairs(config.options.disabled_filetypes) do
+      if filetype == current_filetype then
+         return true
+      end
+   end
+   return false
+end
+
 local function handler(key, info)
+   if is_disabled() then return key end
    local pair = get_pair()
 
    if key == "<BS>" and is_pair(pair) then
@@ -53,11 +68,19 @@ local function handler(key, info)
 end
 
 function autoclose.setup(user_config)
-   for key, info in pairs(user_config) do
-      config[key] = info
+   if user_config.keys ~= nil then
+      for key, info in pairs(user_config.keys) do
+         config.keys[key] = info
+      end
    end
 
-   for key, info in pairs(config) do
+   if user_config.options ~= nil then
+      for key, info in pairs(user_config.options) do
+         config.options[key] = info
+      end
+   end
+
+   for key, info in pairs(config.keys) do
       vim.keymap.set("i", key, function() return handler(key, info) end,
          { noremap = true, expr = true })
    end
