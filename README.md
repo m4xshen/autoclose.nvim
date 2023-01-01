@@ -78,7 +78,7 @@ Example: Add a `$$` pair.
 ```Lua
 require("autoclose").setup({
    keys = {
-      ['$'] = { escape = true, close = true, pair = "$$"},
+      ["$"] = { escape = true, close = true, pair = "$$"},
    },
 })
 ```
@@ -88,7 +88,9 @@ You can also overwrite the default config.
 Example: Remove the escape function of `>`.
 ```Lua
 require("autoclose").setup({
-  [">"] = { escape = false, close = false, pair = "<>"},
+   keys = {
+      [">"] = { escape = false, close = false, pair = "<>"},
+   },
 })
 ```
 
