@@ -18,6 +18,7 @@ local config = {
       ["<BS>"] = {},
       ["<C-W>"] = {},
       ["<CR>"] = {},
+      ["<S-CR>"] = {},
    },
    options = {
       disabled_filetypes = { "text" },
@@ -58,7 +59,7 @@ local function handler(key, info)
 
    if key == "<BS>" or key == "<C-W>" and is_pair(pair) then
       return "<BS><Del>"
-   elseif key == "<CR>" and is_pair(pair) then
+   elseif key == "<CR>" or key == "<S-CR>" and is_pair(pair) then
       return "<CR><ESC>O"
    elseif info.escape and pair:sub(2, 2) == key then
       return "<Right>"

@@ -41,6 +41,8 @@ A minimalist autoclose plugin for [Neovim](https://neovim.io/) written in 100% L
 <img src="https://user-images.githubusercontent.com/74842863/208931512-6f06036a-267a-42d7-9d3e-58a7ddfab1a6.gif" width="500"/>
 
 ### Auto-indent
+(works in `<CR>` and `<S-CR>`)
+
 <img src="https://user-images.githubusercontent.com/74842863/208931561-b9170d08-0697-49b4-90fb-6d432e03c393.gif" width="500"/>
 
 ## ⚡ Requirements
