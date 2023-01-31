@@ -20,6 +20,7 @@ local config = {
    },
    options = {
       disabled_filetypes = { "text" },
+      disable_when_touch = false,
    },
 }
 
@@ -61,6 +62,12 @@ local function handler(key, info)
    elseif info.escape and pair:sub(2, 2) == key then
       return "<Right>"
    elseif info.close then
+      -- disable if the cursor touches alphanumeric character
+      if config.options.disable_when_touch and
+         (get_pair() .. " "):sub(2, 2):match("%w") then
+         return key
+      end
+
       return info.pair .. "<Left>"
    else
       return key

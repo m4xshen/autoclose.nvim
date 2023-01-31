@@ -98,6 +98,8 @@ require("autoclose").setup({
 
 The available options in `options`:
 - `disabled_filetypes`: The plugin will be disabled under the filetypes in this table.
+  - type of the value: table of strings
+  - default value: `{ "text" }`
 
 Example: Disable the plugin in text and markdown file.
 ```Lua
@@ -108,7 +110,34 @@ require("autoclose").setup({
 })
 ```
 
-Here is the default config:
+- `disable_when_touch`: Set this to true will disable the auto-close function when the cursor touches alphanumeric character.
+  - type of the value: boolean
+  - default value: `false`
+
+Example: Set this to `true`
+```Lua
+require("autoclose").setup({
+   options = {
+      disable_when_touch = true,
+   },
+})
+```
+
+Your current file: ( `^` points to your cursor position)
+```text
+word
+^
+```
+
+You press `(` and the file will become
+```
+(word
+^
+```
+It doesn't autoclose for you because your cursor touches `w`.
+
+### Default config
+
 ```Lua
 local config = {
    keys = {
@@ -127,7 +156,7 @@ local config = {
    },
    options = {
       disabled_filetypes = { "text" },
+      disable_when_touch = false,
    },
 }
 ```
-
