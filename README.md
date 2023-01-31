@@ -33,6 +33,8 @@ A minimalist autoclose plugin for [Neovim](https://neovim.io/) written in 100% L
 <img src="https://user-images.githubusercontent.com/74842863/208931426-4f171094-e1c8-4f85-918a-92250d92c933.gif" width="500"/>
 
 ### Auto-delete
+(works in `<BS>` and `<C-W>`)
+
 <img src="https://user-images.githubusercontent.com/74842863/208931458-0ed78f76-0080-4aa9-a36e-e55881090a0c.gif" width="500"/>
 
 ### Auto-escape

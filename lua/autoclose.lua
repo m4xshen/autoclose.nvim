@@ -16,6 +16,7 @@ local config = {
       ["`"] = { escape = true, close = true, pair = "``"},
 
       ["<BS>"] = {},
+      ["<C-W>"] = {},
       ["<CR>"] = {},
    },
    options = {
@@ -55,7 +56,7 @@ local function handler(key, info)
    if is_disabled() then return key end
    local pair = get_pair()
 
-   if key == "<BS>" and is_pair(pair) then
+   if key == "<BS>" or key == "<C-W>" and is_pair(pair) then
       return "<BS><Del>"
    elseif key == "<CR>" and is_pair(pair) then
       return "<CR><ESC>O"
