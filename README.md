@@ -25,7 +25,7 @@ autoclose.nvim
   
 ## 📃 Introduction
   
-A minimalist autoclose plugin for [Neovim](https://neovim.io/) written in 100% Lua. 
+A minimalist [Neovim](https://neovim.io/) plugin that auto pairs & closes brackets written in 100% Lua.
 
 ## ⚙️ Functions
 
