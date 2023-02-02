@@ -77,6 +77,8 @@ local function handler(key, info)
 end
 
 function autoclose.setup(user_config)
+   user_config = user_config or {}
+   
    if user_config.keys ~= nil then
       for key, info in pairs(user_config.keys) do
          config.keys[key] = info
