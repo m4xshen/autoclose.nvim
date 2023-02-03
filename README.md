@@ -64,7 +64,7 @@ use 'm4xshen/autoclose.nvim'
 
 2. Setup the plugin in your `init.lua`.
 ```Lua
-require("autoclose").setup({})
+require("autoclose").setup()
 ```
 
 ## 🔧 Configuration
