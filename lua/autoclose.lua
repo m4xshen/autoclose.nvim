@@ -62,7 +62,7 @@ local function handler(key, info)
    elseif (key == "<CR>" or key == "<S-CR>") and is_pair(pair) then
       return "<CR><ESC>O"
    elseif info.escape and pair:sub(2, 2) == key then
-      return "<Right>"
+      return "<C-G>U<Right>"
    elseif info.close then
       -- disable if the cursor touches alphanumeric character
       if config.options.disable_when_touch and
@@ -70,7 +70,7 @@ local function handler(key, info)
          return key
       end
 
-      return info.pair .. "<Left>"
+      return info.pair .. "<C-G>U<Left>"
    else
       return key
    end
@@ -78,7 +78,7 @@ end
 
 function autoclose.setup(user_config)
    user_config = user_config or {}
-   
+
    if user_config.keys ~= nil then
       for key, info in pairs(user_config.keys) do
          config.keys[key] = info
