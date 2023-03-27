@@ -25,6 +25,7 @@ local config = {
       disabled_filetypes = { "text" },
       disable_when_touch = false,
    },
+   disabled = false,
 }
 
 local function get_pair()
@@ -50,6 +51,9 @@ local function is_disabled()
       if filetype == current_filetype then
          return true
       end
+   end
+   if config.disabled == true then
+      return true
    end
    return false
 end
@@ -96,6 +100,10 @@ function autoclose.setup(user_config)
       vim.keymap.set("i", key, function() return handler(key, info) end,
          { noremap = true, expr = true })
    end
+end
+
+function autoclose.toggle()
+   config.disabled = not config.disabled
 end
 
 return autoclose
