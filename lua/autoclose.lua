@@ -46,14 +46,12 @@ local function is_pair(pair)
 end
 
 local function is_disabled()
+   if config.disabled then return true end
    local current_filetype = vim.api.nvim_buf_get_option(0, "filetype")
    for _, filetype in pairs(config.options.disabled_filetypes) do
       if filetype == current_filetype then
          return true
       end
-   end
-   if config.disabled == true then
-      return true
    end
    return false
 end
