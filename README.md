@@ -118,14 +118,7 @@ require("autoclose").setup({
   - type of the value: boolean
   - default value: `false`
 
-Example: Set this to `true`
-```Lua
-require("autoclose").setup({
-   options = {
-      disable_when_touch = true,
-   },
-})
-```
+Example:
 
 Your current file: ( `^` points to your cursor position)
 ```text
@@ -139,6 +132,24 @@ You press `(` and the file will become
 ^
 ```
 It doesn't autoclose for you because your cursor touches `w`.
+
+- `pair_spaces`: Pair the spaces when cursor is inside a pair of `keys`.
+  - type of the value: boolean
+  - default value: `false`
+
+Example:
+
+The `|` is your cursor in insert mode.
+
+```javascript
+import {|}
+```
+
+after inserting a space:
+
+```javascript
+import { | }
+```
 
 ### Default config
 
@@ -161,6 +172,7 @@ local config = {
    options = {
       disabled_filetypes = { "text" },
       disable_when_touch = false,
+      pair_spaces = false,
    },
 }
 ```
