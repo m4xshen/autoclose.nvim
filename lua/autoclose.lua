@@ -27,6 +27,7 @@ local config = {
       disabled_filetypes = { "text" },
       disable_when_touch = false,
       pair_spaces = false,
+      auto_indent = true,
    },
    disabled = false,
 }
@@ -70,7 +71,7 @@ local function handler(key, info)
    if (key == "<BS>" or key == "<C-H>" or key == "<C-W>") and is_pair(pair) then
       return "<BS><Del>"
    elseif (key == "<CR>" or key == "<S-CR>") and is_pair(pair) then
-      return "<CR><ESC>O"
+      return "<CR><ESC>O" .. (config.options.auto_indent and "" or "<C-D>")
    elseif info.escape and pair:sub(2, 2) == key then
       return "<C-G>U<Right>"
    elseif info.close then
