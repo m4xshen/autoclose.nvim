@@ -151,6 +151,10 @@ after inserting a space:
 import { | }
 ```
 
+- `auto_indent`: Enable auto-indent feature
+  - type of the value: boolean
+  - default value: `true`
+
 ### Default config
 
 ```Lua
@@ -173,6 +177,7 @@ local config = {
       disabled_filetypes = { "text" },
       disable_when_touch = false,
       pair_spaces = false,
+      auto_indent = true,
    },
 }
 ```
