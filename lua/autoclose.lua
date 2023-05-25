@@ -15,6 +15,8 @@ local config = {
       ["'"] = { escape = true, close = true, pair = "''"},
       ["`"] = { escape = true, close = true, pair = "``"},
 
+      [" "] = { escape = false, close = true, pair = "  "},
+
       ["<BS>"] = {},
       ["<C-H>"] = {},
       ["<C-W>"] = {},
@@ -24,6 +26,7 @@ local config = {
    options = {
       disabled_filetypes = { "text" },
       disable_when_touch = false,
+      pair_spaces = false,
    },
    disabled = false,
 }
@@ -37,6 +40,10 @@ local function get_pair()
 end
 
 local function is_pair(pair)
+   if pair == "  " then
+      return false
+   end
+
    for _, info in pairs(config.keys) do
       if pair == info.pair then
          return true
@@ -69,7 +76,14 @@ local function handler(key, info)
    elseif info.close then
       -- disable if the cursor touches alphanumeric character
       if config.options.disable_when_touch and
-         (get_pair() .. " "):sub(2, 2):match("%w") then
+         (get_pair() .. "_"):sub(2, 2):match("%w") then
+         return key
+      end
+
+      -- don't pair spaces
+      if key == " " and
+         (not config.options.pair_spaces or
+         (config.options.pair_spaces and not is_pair(pair))) then
          return key
       end
 
