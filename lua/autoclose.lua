@@ -110,8 +110,13 @@ function autoclose.setup(user_config)
    end
 
    for key, info in pairs(config.keys) do
-      vim.keymap.set("i", key, function() return handler(key, info) end,
-         { noremap = true, expr = true })
+      vim.keymap.set("i", key, function()
+         if key == " " then
+            return "<C-]>" .. handler(key, info)
+         else
+            return handler(key, info)
+         end
+      end, { noremap = true, expr = true })
    end
 end
 
