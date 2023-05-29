@@ -2,20 +2,20 @@ local autoclose = {}
 
 local config = {
    keys = {
-      ["("] = { escape = false, close = true, pair = "()"},
-      ["["] = { escape = false, close = true, pair = "[]"},
-      ["{"] = { escape = false, close = true, pair = "{}"},
+      ["("] = { escape = false, close = true, pair = "()" },
+      ["["] = { escape = false, close = true, pair = "[]" },
+      ["{"] = { escape = false, close = true, pair = "{}" },
 
-      [">"] = { escape = true, close = false, pair = "<>"},
-      [")"] = { escape = true, close = false, pair = "()"},
-      ["]"] = { escape = true, close = false, pair = "[]"},
-      ["}"] = { escape = true, close = false, pair = "{}"},
+      [">"] = { escape = true, close = false, pair = "<>" },
+      [")"] = { escape = true, close = false, pair = "()" },
+      ["]"] = { escape = true, close = false, pair = "[]" },
+      ["}"] = { escape = true, close = false, pair = "{}" },
 
-      ['"'] = { escape = true, close = true, pair = '""'},
-      ["'"] = { escape = true, close = true, pair = "''"},
-      ["`"] = { escape = true, close = true, pair = "``"},
+      ['"'] = { escape = true, close = true, pair = '""' },
+      ["'"] = { escape = true, close = true, pair = "''" },
+      ["`"] = { escape = true, close = true, pair = "``" },
 
-      [" "] = { escape = false, close = true, pair = "  "},
+      [" "] = { escape = false, close = true, pair = "  " },
 
       ["<BS>"] = {},
       ["<C-H>"] = {},
@@ -37,7 +37,7 @@ local function get_pair()
    local line = "_" .. vim.api.nvim_get_current_line()
    local col = vim.api.nvim_win_get_cursor(0)[2] + 1
 
-   return line:sub(col, col+1)
+   return line:sub(col, col + 1)
 end
 
 local function is_pair(pair)
@@ -54,7 +54,9 @@ local function is_pair(pair)
 end
 
 local function is_disabled()
-   if config.disabled then return true end
+   if config.disabled then
+      return true
+   end
    local current_filetype = vim.api.nvim_buf_get_option(0, "filetype")
    for _, filetype in pairs(config.options.disabled_filetypes) do
       if filetype == current_filetype then
@@ -65,7 +67,9 @@ local function is_disabled()
 end
 
 local function handler(key, info)
-   if is_disabled() then return key end
+   if is_disabled() then
+      return key
+   end
    local pair = get_pair()
 
    if (key == "<BS>" or key == "<C-H>" or key == "<C-W>") and is_pair(pair) then
@@ -76,18 +80,22 @@ local function handler(key, info)
       return "<C-G>U<Right>"
    elseif info.close then
       -- disable if the cursor touches alphanumeric character
-      if config.options.disable_when_touch and
-         (get_pair() .. "_"):sub(2, 2):match("%w") then
+      if
+         config.options.disable_when_touch
+         and (get_pair() .. "_"):sub(2, 2):match("%w")
+      then
          return key
       end
 
       -- don't pair spaces
-      if key == " " and
-         (
-            not config.options.pair_spaces or
-            (config.options.pair_spaces and not is_pair(pair)) or
-            pair:sub(1, 1) == pair:sub(2, 2)
-         ) then
+      if
+         key == " "
+         and (
+            not config.options.pair_spaces
+            or (config.options.pair_spaces and not is_pair(pair))
+            or pair:sub(1, 1) == pair:sub(2, 2)
+         )
+      then
          return key
       end
 
