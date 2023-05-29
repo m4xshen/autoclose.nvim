@@ -83,8 +83,11 @@ local function handler(key, info)
 
       -- don't pair spaces
       if key == " " and
-         (not config.options.pair_spaces or
-         (config.options.pair_spaces and not is_pair(pair))) then
+         (
+            not config.options.pair_spaces or
+            (config.options.pair_spaces and not is_pair(pair)) or
+            pair:sub(1, 1) == pair:sub(2, 2)
+         ) then
          return key
       end
 
