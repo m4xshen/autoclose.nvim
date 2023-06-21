@@ -2,20 +2,20 @@ local autoclose = {}
 
 local config = {
    keys = {
-      ["("] = { escape = false, close = true, pair = "()" },
-      ["["] = { escape = false, close = true, pair = "[]" },
-      ["{"] = { escape = false, close = true, pair = "{}" },
+      ["("] = { escape = false, close = true, pair = "()", disabled_filetypes = {} },
+      ["["] = { escape = false, close = true, pair = "[]", disabled_filetypes = {} },
+      ["{"] = { escape = false, close = true, pair = "{}", disabled_filetypes = {} },
 
-      [">"] = { escape = true, close = false, pair = "<>" },
-      [")"] = { escape = true, close = false, pair = "()" },
-      ["]"] = { escape = true, close = false, pair = "[]" },
-      ["}"] = { escape = true, close = false, pair = "{}" },
+      [">"] = { escape = true, close = false, pair = "<>", disabled_filetypes = {} },
+      [")"] = { escape = true, close = false, pair = "()", disabled_filetypes = {} },
+      ["]"] = { escape = true, close = false, pair = "[]", disabled_filetypes = {} },
+      ["}"] = { escape = true, close = false, pair = "{}", disabled_filetypes = {} },
 
-      ['"'] = { escape = true, close = true, pair = '""' },
-      ["'"] = { escape = true, close = true, pair = "''" },
-      ["`"] = { escape = true, close = true, pair = "``" },
+      ['"'] = { escape = true, close = true, pair = '""', disabled_filetypes = {} },
+      ["'"] = { escape = true, close = true, pair = "''", disabled_filetypes = {} },
+      ["`"] = { escape = true, close = true, pair = "``", disabled_filetypes = {} },
 
-      [" "] = { escape = false, close = true, pair = "  " },
+      [" "] = { escape = false, close = true, pair = "  ", disabled_filetypes = {} },
 
       ["<BS>"] = {},
       ["<C-H>"] = {},
@@ -53,7 +53,7 @@ local function is_pair(pair)
    return false
 end
 
-local function is_disabled()
+local function is_disabled(info)
    if config.disabled then
       return true
    end
@@ -63,11 +63,20 @@ local function is_disabled()
          return true
       end
    end
+
+   -- Let's check if the disabled_filetypes key is in the info table
+   if info["disabled_filetypes"] ~= nil then
+      for _, filetype in pairs(info.disabled_filetypes) do
+         if filetype == current_filetype then
+            return true
+         end
+      end
+   end
    return false
 end
 
 local function handler(key, info)
-   if is_disabled() then
+   if is_disabled(info) then
       return key
    end
    local pair = get_pair()
