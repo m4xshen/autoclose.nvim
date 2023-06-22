@@ -173,14 +173,6 @@ local config = {
       ['"'] = { escape = true, close = true, pair = '""', disabled_filetypes = {} },
       ["'"] = { escape = true, close = true, pair = "''", disabled_filetypes = {} },
       ["`"] = { escape = true, close = true, pair = "``", disabled_filetypes = {} },
-
-      [" "] = { escape = false, close = true, pair = "  ", disabled_filetypes = {} },
-
-      ["<BS>"] = {},
-      ["<C-H>"] = {},
-      ["<C-W>"] = {},
-      ["<CR>"] = {},
-      ["<S-CR>"] = {},
    },
    options = {
       disabled_filetypes = { "text" },
@@ -188,6 +180,5 @@ local config = {
       pair_spaces = false,
       auto_indent = true,
    },
-   disabled = false,
 }
 ```
