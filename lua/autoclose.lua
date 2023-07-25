@@ -20,8 +20,8 @@ local config = {
       ["<BS>"] = {},
       ["<C-H>"] = {},
       ["<C-W>"] = {},
-      ["<CR>"] = {},
-      ["<S-CR>"] = {},
+      ["<CR>"] = { disable_command_mode = true },
+      ["<S-CR>"] = { disable_command_mode = true },
    },
    options = {
       disabled_filetypes = { "text" },
@@ -32,10 +32,18 @@ local config = {
    disabled = false,
 }
 
-local function get_pair()
+local function insert_get_pair()
    -- add "_" to let close function work in the first col
    local line = "_" .. vim.api.nvim_get_current_line()
    local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+
+   return line:sub(col, col + 1)
+end
+
+local function command_get_pair()
+   -- add "_" to let close function work in the first col
+   local line = "_" .. vim.fn.getcmdline()
+   local col = vim.fn.getcmdpos()
 
    return line:sub(col, col + 1)
 end
@@ -75,11 +83,11 @@ local function is_disabled(info)
    return false
 end
 
-local function handler(key, info)
+local function insert_handler(key, info)
    if is_disabled(info) then
       return key
    end
-   local pair = get_pair()
+   local pair = insert_get_pair()
 
    if (key == "<BS>" or key == "<C-H>" or key == "<C-W>") and is_pair(pair) then
       return "<BS><Del>"
@@ -91,7 +99,7 @@ local function handler(key, info)
       -- disable if the cursor touches alphanumeric character
       if
          config.options.disable_when_touch
-         and (get_pair() .. "_"):sub(2, 2):match("%w")
+         and (insert_get_pair() .. "_"):sub(2, 2):match("%w")
       then
          return key
       end
@@ -114,6 +122,43 @@ local function handler(key, info)
    end
 end
 
+local function command_handler(key, info)
+   if is_disabled(info) then
+      return key
+   end
+   local pair = command_get_pair()
+
+   if (key == "<BS>" or key == "<C-H>" or key == "<C-W>") and is_pair(pair) then
+      return "<BS><Del>"
+   elseif info.escape and pair:sub(2, 2) == key then
+      return "<Right>"
+   elseif info.close then
+      -- disable if the cursor touches alphanumeric character
+      if
+         config.options.disable_when_touch
+         and (command_get_pair() .. "_"):sub(2, 2):match("%w")
+      then
+         return key
+      end
+
+      -- don't pair spaces
+      if
+         key == " "
+         and (
+            not config.options.pair_spaces
+            or (config.options.pair_spaces and not is_pair(pair))
+            or pair:sub(1, 1) == pair:sub(2, 2)
+         )
+      then
+         return key
+      end
+
+      return info.pair .. "<Left>"
+   else
+      return key
+   end
+end
+
 function autoclose.setup(user_config)
    user_config = user_config or {}
 
@@ -131,8 +176,13 @@ function autoclose.setup(user_config)
 
    for key, info in pairs(config.keys) do
       vim.keymap.set("i", key, function()
-         return (key == " " and "<C-]>" or "") .. handler(key, info)
+         return (key == " " and "<C-]>" or "") .. insert_handler(key, info)
       end, { noremap = true, expr = true })
+      if not config.keys.disable_command_mode
+         then vim.keymap.set("c", key, function()
+            return (key == " " and "<C-]>" or "") .. command_handler(key, info)
+         end, { noremap = true, expr = true })
+      end
    end
 end
 
