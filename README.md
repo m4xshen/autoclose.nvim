@@ -28,6 +28,7 @@ autoclose.nvim
 A minimalist [Neovim](https://neovim.io/) plugin that auto pairs & closes brackets written in 100% Lua.
 
 ## ⚙️ Functions
+Most functions work in both insert and command-line mode.
 
 ### Auto-close
 <img src="https://user-images.githubusercontent.com/74842863/208931426-4f171094-e1c8-4f85-918a-92250d92c933.gif" width="500"/>
@@ -41,7 +42,7 @@ A minimalist [Neovim](https://neovim.io/) plugin that auto pairs & closes bracke
 <img src="https://user-images.githubusercontent.com/74842863/208931512-6f06036a-267a-42d7-9d3e-58a7ddfab1a6.gif" width="500"/>
 
 ### Auto-indent
-(works in `<CR>` and `<S-CR>`)
+(works in `<CR>` and `<S-CR>`, only in insert mode)
 
 <img src="https://user-images.githubusercontent.com/74842863/208931561-b9170d08-0697-49b4-90fb-6d432e03c393.gif" width="500"/>
 
@@ -78,6 +79,7 @@ The available options in `keys`:
 - `escape`: If set to true, pressing the character again will escape it instead of inserting a closing character.
 - `pair`: The string that represents the pair of opening and closing characters. This should be a two-character string, with the opening character first and the closing character second.
 - `disabled_filetypes`: Table of filetypes where the specific key should not be autoclosed.
+- `disable_command_mode`: If set to true, the character will be disabled in command-line mode.
 
 Example: Add a `$$` pair.
 ```Lua
