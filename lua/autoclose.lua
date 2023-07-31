@@ -20,8 +20,8 @@ local config = {
       ["<BS>"] = {},
       ["<C-H>"] = {},
       ["<C-W>"] = {},
-      ["<CR>"] = {},
-      ["<S-CR>"] = {},
+      ["<CR>"] = { disable_command_mode = true },
+      ["<S-CR>"] = { disable_command_mode = true },
    },
    options = {
       disabled_filetypes = { "text" },
@@ -32,10 +32,18 @@ local config = {
    disabled = false,
 }
 
-local function get_pair()
+local function insert_get_pair()
    -- add "_" to let close function work in the first col
    local line = "_" .. vim.api.nvim_get_current_line()
    local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+
+   return line:sub(col, col + 1)
+end
+
+local function command_get_pair()
+   -- add "_" to let close function work in the first col
+   local line = "_" .. vim.fn.getcmdline()
+   local col = vim.fn.getcmdpos()
 
    return line:sub(col, col + 1)
 end
@@ -75,23 +83,28 @@ local function is_disabled(info)
    return false
 end
 
-local function handler(key, info)
+local function handler(key, info, mode)
    if is_disabled(info) then
       return key
    end
-   local pair = get_pair()
+
+   local pair = mode == "insert" and insert_get_pair() or command_get_pair()
 
    if (key == "<BS>" or key == "<C-H>" or key == "<C-W>") and is_pair(pair) then
       return "<BS><Del>"
-   elseif (key == "<CR>" or key == "<S-CR>") and is_pair(pair) then
+   elseif
+      mode == "insert"
+      and (key == "<CR>" or key == "<S-CR>")
+      and is_pair(pair)
+   then
       return "<CR><ESC>O" .. (config.options.auto_indent and "" or "<C-D>")
    elseif info.escape and pair:sub(2, 2) == key then
-      return "<C-G>U<Right>"
+      return mode == "insert" and "<C-G>U<Right>" or "<Right>"
    elseif info.close then
       -- disable if the cursor touches alphanumeric character
       if
          config.options.disable_when_touch
-         and (get_pair() .. "_"):sub(2, 2):match("%w")
+         and (pair .. "_"):sub(2, 2):match("%w")
       then
          return key
       end
@@ -108,7 +121,7 @@ local function handler(key, info)
          return key
       end
 
-      return info.pair .. "<C-G>U<Left>"
+      return info.pair .. (mode == "insert" and "<C-G>U<Left>" or "<Left>")
    else
       return key
    end
@@ -131,8 +144,14 @@ function autoclose.setup(user_config)
 
    for key, info in pairs(config.keys) do
       vim.keymap.set("i", key, function()
-         return (key == " " and "<C-]>" or "") .. handler(key, info)
+         return (key == " " and "<C-]>" or "") .. handler(key, info, "insert")
       end, { noremap = true, expr = true })
+      if not config.keys.disable_command_mode then
+         vim.keymap.set("c", key, function()
+            return (key == " " and "<C-]>" or "")
+               .. handler(key, info, "command")
+         end, { noremap = true, expr = true })
+      end
    end
 end
 
