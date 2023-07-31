@@ -83,23 +83,28 @@ local function is_disabled(info)
    return false
 end
 
-local function insert_handler(key, info)
+local function handler(key, info, mode)
    if is_disabled(info) then
       return key
    end
-   local pair = insert_get_pair()
+
+   local pair = mode == "insert" and insert_get_pair() or command_get_pair()
 
    if (key == "<BS>" or key == "<C-H>" or key == "<C-W>") and is_pair(pair) then
       return "<BS><Del>"
-   elseif (key == "<CR>" or key == "<S-CR>") and is_pair(pair) then
+   elseif
+      mode == "insert"
+      and (key == "<CR>" or key == "<S-CR>")
+      and is_pair(pair)
+   then
       return "<CR><ESC>O" .. (config.options.auto_indent and "" or "<C-D>")
    elseif info.escape and pair:sub(2, 2) == key then
-      return "<C-G>U<Right>"
+      return mode == "insert" and "<C-G>U<Right>" or "<Right>"
    elseif info.close then
       -- disable if the cursor touches alphanumeric character
       if
          config.options.disable_when_touch
-         and (insert_get_pair() .. "_"):sub(2, 2):match("%w")
+         and (pair .. "_"):sub(2, 2):match("%w")
       then
          return key
       end
@@ -116,44 +121,7 @@ local function insert_handler(key, info)
          return key
       end
 
-      return info.pair .. "<C-G>U<Left>"
-   else
-      return key
-   end
-end
-
-local function command_handler(key, info)
-   if is_disabled(info) then
-      return key
-   end
-   local pair = command_get_pair()
-
-   if (key == "<BS>" or key == "<C-H>" or key == "<C-W>") and is_pair(pair) then
-      return "<BS><Del>"
-   elseif info.escape and pair:sub(2, 2) == key then
-      return "<Right>"
-   elseif info.close then
-      -- disable if the cursor touches alphanumeric character
-      if
-         config.options.disable_when_touch
-         and (command_get_pair() .. "_"):sub(2, 2):match("%w")
-      then
-         return key
-      end
-
-      -- don't pair spaces
-      if
-         key == " "
-         and (
-            not config.options.pair_spaces
-            or (config.options.pair_spaces and not is_pair(pair))
-            or pair:sub(1, 1) == pair:sub(2, 2)
-         )
-      then
-         return key
-      end
-
-      return info.pair .. "<Left>"
+      return info.pair .. (mode == "insert" and "<C-G>U<Left>" or "<Left>")
    else
       return key
    end
@@ -176,11 +144,12 @@ function autoclose.setup(user_config)
 
    for key, info in pairs(config.keys) do
       vim.keymap.set("i", key, function()
-         return (key == " " and "<C-]>" or "") .. insert_handler(key, info)
+         return (key == " " and "<C-]>" or "") .. handler(key, info, "insert")
       end, { noremap = true, expr = true })
-      if not config.keys.disable_command_mode
-         then vim.keymap.set("c", key, function()
-            return (key == " " and "<C-]>" or "") .. command_handler(key, info)
+      if not config.keys.disable_command_mode then
+         vim.keymap.set("c", key, function()
+            return (key == " " and "<C-]>" or "")
+               .. handler(key, info, "command")
          end, { noremap = true, expr = true })
       end
    end
