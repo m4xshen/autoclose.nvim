@@ -117,9 +117,13 @@ require("autoclose").setup({
 })
 ```
 
-- `disable_when_touch`: Set this to true will disable the auto-close function when the cursor touches alphanumeric character.
+- `disable_when_touch`: Set this to true will disable the auto-close function when the cursor touches character that matches `touch_regex`.
   - type of the value: boolean
   - default value: `false`
+
+- `touch_regex`
+  - type of the value: string
+  - default value: `"[%w(%[{]"` (alphanumeric characters or `(` or `[` or `{`)
 
 Example:
 
@@ -179,6 +183,7 @@ local config = {
    options = {
       disabled_filetypes = { "text" },
       disable_when_touch = false,
+      touch_regex = "[%w(%[{]",
       pair_spaces = false,
       auto_indent = true,
    },
