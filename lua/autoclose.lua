@@ -73,6 +73,15 @@ local function is_disabled(info)
       end
    end
 
+   if info["enabled_filetypes"] ~= nil then
+      for _, filetype in pairs(info.enabled_filetypes) do
+         if filetype == current_filetype then
+            return false
+         end
+      end
+      return true
+   end
+
    -- Let's check if the disabled_filetypes key is in the info table
    if info["disabled_filetypes"] ~= nil then
       for _, filetype in pairs(info.disabled_filetypes) do
