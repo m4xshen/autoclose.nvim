@@ -147,7 +147,8 @@ function autoclose.setup(user_config)
       vim.keymap.set("i", key, function()
          return (key == " " and "<C-]>" or "") .. handler(key, info, "insert")
       end, { noremap = true, expr = true })
-      if not config.keys.disable_command_mode then
+
+      if not info.disable_command_mode then
          vim.keymap.set("c", key, function()
             return (key == " " and "<C-]>" or "")
                .. handler(key, info, "command")
