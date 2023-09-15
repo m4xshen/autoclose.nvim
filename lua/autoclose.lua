@@ -29,6 +29,7 @@ local config = {
       touch_regex = "[%w(%[{]",
       pair_spaces = false,
       auto_indent = true,
+      disable_command_mode = false,
    },
    disabled = false,
 }
@@ -157,7 +158,10 @@ function autoclose.setup(user_config)
          return (key == " " and "<C-]>" or "") .. handler(key, info, "insert")
       end, { noremap = true, expr = true })
 
-      if not info.disable_command_mode then
+      if
+         not config.options.disable_command_mode
+         and not info.disable_command_mode
+      then
          vim.keymap.set("c", key, function()
             return (key == " " and "<C-]>" or "")
                .. handler(key, info, "command")
