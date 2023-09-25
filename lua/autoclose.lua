@@ -34,6 +34,14 @@ local config = {
    disabled = false,
 }
 
+local function is_start_of_line(mode)
+   if mode == "command" then
+      return vim.fn.getcmdpos() == 1
+   end
+
+   return vim.api.nvim_win_get_cursor(0)[2] + 1 == 1
+end
+
 local function insert_get_pair()
    -- add "_" to let close function work in the first col
    local line = "_" .. vim.api.nvim_get_current_line()
@@ -109,7 +117,11 @@ local function handler(key, info, mode)
       and is_pair(pair)
    then
       return "<CR><ESC>O" .. (config.options.auto_indent and "" or "<C-D>")
-   elseif info.escape and pair:sub(2, 2) == key then
+   elseif
+      info.escape
+      and not is_start_of_line(mode)
+      and pair:sub(2, 2) == key
+   then
       return mode == "insert" and "<C-G>U<Right>" or "<Right>"
    elseif info.close then
       -- disable if the cursor touches alphanumeric character
