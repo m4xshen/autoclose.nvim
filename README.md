@@ -77,7 +77,7 @@ You can pass your config table into the `setup()` function.
 The available options in `keys`:
 - `close`: If set to true, pressing the character will insert both the opening and closing characters, and place the cursor in between them.
 - `escape`: If set to true, pressing the character again will escape it instead of inserting a closing character.
-- `pair`: The string that represents the pair of opening and closing characters. This should be a two-character string, with the opening character first and the closing character second.
+- `pair`: The table that represents the pair of opening and closing characters. This should be a two-item (list-like) table, with the opening character first and the closing character second.
 - `disabled_filetypes`: Table of filetypes where the specific key should not be autoclosed.
 - `enabled_filetypes`: Only autoclose the key under these filetypes. This option takes precedence over `disabled_filetypes`.
 - `disable_command_mode`: If set to true, the character will be disabled in command-line mode.
@@ -86,7 +86,7 @@ Example: Add a `$$` pair.
 ```Lua
 require("autoclose").setup({
    keys = {
-      ["$"] = { escape = true, close = true, pair = "$$", disabled_filetypes = {} },
+      ["$"] = { escape = true, close = true, pair = { "$", "$" }, disabled_filetypes = {} },
    },
 })
 ```
@@ -97,7 +97,7 @@ Example: Remove the escape function of `>`.
 ```Lua
 require("autoclose").setup({
    keys = {
-      [">"] = { escape = false, close = false, pair = "<>", disabled_filetypes = {} },
+      [">"] = { escape = false, close = false, pair = { "<", ">" }, disabled_filetypes = {} },
    },
 })
 ```
@@ -172,18 +172,18 @@ import { | }
 ```Lua
 local config = {
    keys = {
-      ["("] = { escape = false, close = true, pair = "()" },
-      ["["] = { escape = false, close = true, pair = "[]" },
-      ["{"] = { escape = false, close = true, pair = "{}" },
+      ["("] = { escape = false, close = true, pair = { "(", ")" } },
+      ["["] = { escape = false, close = true, pair = { "[", "]" } },
+      ["{"] = { escape = false, close = true, pair = { "{", "}" } },
 
-      [">"] = { escape = true, close = false, pair = "<>" },
-      [")"] = { escape = true, close = false, pair = "()" },
-      ["]"] = { escape = true, close = false, pair = "[]" },
-      ["}"] = { escape = true, close = false, pair = "{}" },
+      [">"] = { escape = true, close = false, pair = { "<", ">" } },
+      [")"] = { escape = true, close = false, pair = { "(", ")" } },
+      ["]"] = { escape = true, close = false, pair = { "[", "]" } },
+      ["}"] = { escape = true, close = false, pair = { "{", "}" } },
 
-      ['"'] = { escape = true, close = true, pair = '""' },
-      ["'"] = { escape = true, close = true, pair = "''" },
-      ["`"] = { escape = true, close = true, pair = "``" },
+      ['"'] = { escape = true, close = true, pair = { '"', '"' } },
+      ["'"] = { escape = true, close = true, pair = { "'", "'" } },
+      ["`"] = { escape = true, close = true, pair = { "`", "`" } },
    },
    options = {
       disabled_filetypes = { "text" },

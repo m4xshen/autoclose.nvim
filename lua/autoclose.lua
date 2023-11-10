@@ -2,20 +2,20 @@ local autoclose = {}
 
 local config = {
    keys = {
-      ["("] = { escape = false, close = true, pair = "()" },
-      ["["] = { escape = false, close = true, pair = "[]" },
-      ["{"] = { escape = false, close = true, pair = "{}" },
+      ["("] = { escape = false, close = true, pair = { "(", ")" } },
+      ["["] = { escape = false, close = true, pair = { "[", "]" } },
+      ["{"] = { escape = false, close = true, pair = { "{", "}" } },
 
-      [">"] = { escape = true, close = false, pair = "<>" },
-      [")"] = { escape = true, close = false, pair = "()" },
-      ["]"] = { escape = true, close = false, pair = "[]" },
-      ["}"] = { escape = true, close = false, pair = "{}" },
+      [">"] = { escape = true, close = false, pair = { "<", ">" } },
+      [")"] = { escape = true, close = false, pair = { "(", ")" } },
+      ["]"] = { escape = true, close = false, pair = { "[", "]" } },
+      ["}"] = { escape = true, close = false, pair = { "{", "}" } },
 
-      ['"'] = { escape = true, close = true, pair = '""' },
-      ["'"] = { escape = true, close = true, pair = "''" },
-      ["`"] = { escape = true, close = true, pair = "``" },
+      ['"'] = { escape = true, close = true, pair = { '"', '"' } },
+      ["'"] = { escape = true, close = true, pair = { "'", "'" } },
+      ["`"] = { escape = true, close = true, pair = { "`", "`" } },
 
-      [" "] = { escape = false, close = true, pair = "  " },
+      [" "] = { escape = false, close = true, pair = { " ", " " } },
 
       ["<BS>"] = {},
       ["<C-H>"] = {},
@@ -34,12 +34,35 @@ local config = {
    disabled = false,
 }
 
+local function chars_by_position(line, char_positions)
+   local chars = {}
+
+   for i, pos in ipairs(char_positions) do
+      if char_positions[i + 1] then
+         chars[i] = line:sub(pos, char_positions[i + 1] - 1)
+      else
+         chars[i] = line:sub(pos, #line)
+      end
+   end
+
+   return chars
+end
+
 local function insert_get_pair()
    -- add "_" to let close function work in the first col
    local line = "_" .. vim.api.nvim_get_current_line()
    local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+   local char_positions = vim.str_utf_pos(line)
 
-   return line:sub(col, col + 1)
+   -- If there are no multibyte characters, the simple solution works.
+   if #line == #char_positions then
+      return { line:sub(col, col), line:sub(col + 1, col + 1) }
+   end
+
+   local chars = chars_by_position(line, char_positions)
+   local cursor_char_pos = vim.fn.getcursorcharpos(0)[3]
+
+   return { chars[cursor_char_pos], chars[cursor_char_pos + 1] }
 end
 
 local function command_get_pair()
@@ -47,16 +70,24 @@ local function command_get_pair()
    local line = "_" .. vim.fn.getcmdline()
    local col = vim.fn.getcmdpos()
 
-   return line:sub(col, col + 1)
+   return { line:sub(col, col), line:sub(col + 1, col + 1) }
+end
+
+local function is_equal_pair(p1, p2)
+   if #p1 ~= #p2 then
+      return false
+   end
+
+   return p1[1] == p2[1] and p1[2] == p2[2]
 end
 
 local function is_pair(pair)
-   if pair == "  " then
+   if is_equal_pair(pair, { " ", " " }) then
       return false
    end
 
    for _, info in pairs(config.keys) do
-      if pair == info.pair then
+      if is_equal_pair(pair, info.pair or {}) then
          return true
       end
    end
@@ -67,7 +98,8 @@ local function is_disabled(info)
    if config.disabled then
       return true
    end
-   local current_filetype = vim.api.nvim_buf_get_option(0, "filetype")
+   local current_filetype =
+      vim.api.nvim_get_option_value("filetype", { buf = 0 })
    for _, filetype in pairs(config.options.disabled_filetypes) do
       if filetype == current_filetype then
          return true
@@ -109,13 +141,13 @@ local function handler(key, info, mode)
       and is_pair(pair)
    then
       return "<CR><ESC>O" .. (config.options.auto_indent and "" or "<C-D>")
-   elseif info.escape and pair:sub(2, 2) == key then
+   elseif info.escape and pair[2] == key then
       return mode == "insert" and "<C-G>U<Right>" or "<Right>"
    elseif info.close then
       -- disable if the cursor touches alphanumeric character
       if
          config.options.disable_when_touch
-         and (pair .. "_"):sub(2, 2):match(config.options.touch_regex)
+         and (pair[2] .. "_"):match(config.options.touch_regex)
       then
          return key
       end
@@ -126,13 +158,14 @@ local function handler(key, info, mode)
          and (
             not config.options.pair_spaces
             or (config.options.pair_spaces and not is_pair(pair))
-            or pair:sub(1, 1) == pair:sub(2, 2)
+            or pair[1] == pair[2]
          )
       then
          return key
       end
 
-      return info.pair .. (mode == "insert" and "<C-G>U<Left>" or "<Left>")
+      return table.concat(info.pair, "")
+         .. (mode == "insert" and "<C-G>U<Left>" or "<Left>")
    else
       return key
    end
