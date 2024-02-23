@@ -1,3 +1,5 @@
+<!-- panvimdoc-ignore-start -->
+
 <h1 align="center">
 autoclose.nvim
 </h1>
@@ -45,6 +47,8 @@ Most functions work in both insert and command-line mode.
 (works in `<CR>` and `<S-CR>`, only in insert mode)
 
 <img src="https://user-images.githubusercontent.com/74842863/208931561-b9170d08-0697-49b4-90fb-6d432e03c393.gif" width="500"/>
+
+<!-- panvimdoc-ignore-end -->
 
 ## ⚡ Requirements
 
