@@ -79,6 +79,7 @@ You can pass your config table into the `setup()` function.
 ### Keys
 
 The available options in `keys`:
+
 - `close`: If set to true, pressing the character will insert both the opening and closing characters, and place the cursor in between them.
 - `escape`: If set to true, pressing the character again will escape it instead of inserting a closing character.
 - `pair`: The string that represents the pair of opening and closing characters. This should be a two-character string, with the opening character first and the closing character second.
@@ -109,6 +110,7 @@ require("autoclose").setup({
 ### Options
 
 The available options in `options`:
+
 - `disabled_filetypes`: The plugin will be disabled under the filetypes in this table.
   - type of the value: table of strings
   - default value: `{ "text" }`
