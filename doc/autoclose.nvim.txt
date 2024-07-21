@@ -1,18 +1,18 @@
-*autoclose.nvim.txt*       For Neovim >= 0.7.0       Last change: 2024 July 21
+*autoclose.nvim.txt*         For NVIM v0.8.0         Last change: 2024 July 21
 
 ==============================================================================
 Table of Contents                           *autoclose.nvim-table-of-contents*
 
-  - Requirements                                 |autoclose.nvim-requirements|
-  - Installation                                 |autoclose.nvim-installation|
-  - Configuration                               |autoclose.nvim-configuration|
+  - ⚡ Requirements                         |autoclose.nvim-⚡-requirements|
+  - 📦 Installation                       |autoclose.nvim-📦-installation|
+  - 🔧 Configuration                     |autoclose.nvim-🔧-configuration|
 
-REQUIREMENTS                                     *autoclose.nvim-requirements*
+⚡ REQUIREMENTS                             *autoclose.nvim-⚡-requirements*
 
 - Neovim >= v0.7.0 <https://github.com/neovim/neovim/releases/tag/v0.7.0>
 
 
-INSTALLATION                                     *autoclose.nvim-installation*
+📦 INSTALLATION                           *autoclose.nvim-📦-installation*
 
 1. Install via your favorite package manager.
 
@@ -35,21 +35,21 @@ INSTALLATION                                     *autoclose.nvim-installation*
 <
 
 
-CONFIGURATION                                   *autoclose.nvim-configuration*
+🔧 CONFIGURATION                         *autoclose.nvim-🔧-configuration*
 
 You can pass your config table into the `setup()` function.
 
 
 KEYS ~
 
-The available options in `keys`
+The available options in `keys`:
 
-- `close`If set to true, pressing the character will insert both the opening and closing characters, and place the cursor in between them.
-- `escape`If set to true, pressing the character again will escape it instead of inserting a closing character.
-- `pair`The string that represents the pair of opening and closing characters. This should be a two-character string, with the opening character first and the closing character second.
-- `disabled_filetypes`Table of filetypes where the specific key should not be autoclosed.
-- `enabled_filetypes`Only autoclose the key under these filetypes. This option takes precedence over `disabled_filetypes`.
-- `disable_command_mode`If set to true, the character will be disabled in command-line mode.
+- `close`: If set to true, pressing the character will insert both the opening and closing characters, and place the cursor in between them.
+- `escape`: If set to true, pressing the character again will escape it instead of inserting a closing character.
+- `pair`: The string that represents the pair of opening and closing characters. This should be a two-character string, with the opening character first and the closing character second.
+- `disabled_filetypes`: Table of filetypes where the specific key should not be autoclosed.
+- `enabled_filetypes`: Only autoclose the key under these filetypes. This option takes precedence over `disabled_filetypes`.
+- `disable_command_mode`: If set to true, the character will be disabled in command-line mode.
 
 Example: Add a `$$` pair.
 
@@ -76,9 +76,9 @@ Example: Remove the escape function of `>`.
 
 OPTIONS ~
 
-The available options in `options`
+The available options in `options`:
 
-- `disabled_filetypes`The plugin will be disabled under the filetypes in this table.
+- `disabled_filetypes`: The plugin will be disabled under the filetypes in this table.
     - type of the value: table of strings
     - default value: `{ "text" }`
 
@@ -92,7 +92,7 @@ Example: Disable the plugin in text and markdown file.
     })
 <
 
-- `disable_when_touch`Set this to true will disable the auto-close function when the cursor touches character that matches `touch_regex`.
+- `disable_when_touch`: Set this to true will disable the auto-close function when the cursor touches character that matches `touch_regex`.
     - type of the value: boolean
     - default value: `false`
 - `touch_regex`
@@ -117,7 +117,7 @@ You press `(` and the file will become
 
 It doesn’t autoclose for you because your cursor touches `w`.
 
-- `pair_spaces`Pair the spaces when cursor is inside a pair of `keys`.
+- `pair_spaces`: Pair the spaces when cursor is inside a pair of `keys`.
     - type of the value: boolean
     - default value: `false`
 
@@ -135,10 +135,10 @@ after inserting a space:
     import { | }
 <
 
-- `auto_indent`Enable auto-indent feature
+- `auto_indent`: Enable auto-indent feature
     - type of the value: boolean
     - default value: `true`
-- `disable_command_mode`Disable autoclose for command mode globally
+- `disable_command_mode`: Disable autoclose for command mode globally
     - type of the value: boolean
     - default value: `false`
 
