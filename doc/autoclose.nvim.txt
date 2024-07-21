@@ -1,4 +1,4 @@
-*autoclose.nvim.txt*     For Neovim >= 0.7.0     Last change: 2024 February 23
+*autoclose.nvim.txt*       For Neovim >= 0.7.0       Last change: 2024 July 21
 
 ==============================================================================
 Table of Contents                           *autoclose.nvim-table-of-contents*
