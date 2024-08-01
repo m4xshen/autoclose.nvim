@@ -67,7 +67,12 @@ local function is_disabled(info)
    if config.disabled then
       return true
    end
-   local current_filetype = vim.api.nvim_buf_get_option(0, "filetype")
+   local current_filetype
+   if vim.fn.has("nvim-0.10.0") == 1 then
+      current_filetype = vim.api.nvim_get_option_value("filetype", { buf = 0 })
+   else
+      current_filetype = vim.api.nvim_buf_get_option(0, "filetype")
+   end
    for _, filetype in pairs(config.options.disabled_filetypes) do
       if filetype == current_filetype then
          return true
@@ -104,9 +109,9 @@ local function handler(key, info, mode)
    if (key == "<BS>" or key == "<C-H>" or key == "<C-W>") and is_pair(pair) then
       return "<BS><Del>"
    elseif
-      mode == "insert"
-      and (key == "<CR>" or key == "<S-CR>")
-      and is_pair(pair)
+       mode == "insert"
+       and (key == "<CR>" or key == "<S-CR>")
+       and is_pair(pair)
    then
       return "<CR><ESC>O" .. (config.options.auto_indent and "" or "<C-D>")
    elseif info.escape and pair:sub(2, 2) == key then
@@ -114,20 +119,20 @@ local function handler(key, info, mode)
    elseif info.close then
       -- disable if the cursor touches alphanumeric character
       if
-         config.options.disable_when_touch
-         and (pair .. "_"):sub(2, 2):match(config.options.touch_regex)
+          config.options.disable_when_touch
+          and (pair .. "_"):sub(2, 2):match(config.options.touch_regex)
       then
          return key
       end
 
       -- don't pair spaces
       if
-         key == " "
-         and (
-            not config.options.pair_spaces
-            or (config.options.pair_spaces and not is_pair(pair))
-            or pair:sub(1, 1) == pair:sub(2, 2)
-         )
+          key == " "
+          and (
+             not config.options.pair_spaces
+             or (config.options.pair_spaces and not is_pair(pair))
+             or pair:sub(1, 1) == pair:sub(2, 2)
+          )
       then
          return key
       end
@@ -159,12 +164,12 @@ function autoclose.setup(user_config)
       end, { noremap = true, expr = true })
 
       if
-         not config.options.disable_command_mode
-         and not info.disable_command_mode
+          not config.options.disable_command_mode
+          and not info.disable_command_mode
       then
          vim.keymap.set("c", key, function()
             return (key == " " and "<C-]>" or "")
-               .. handler(key, info, "command")
+                .. handler(key, info, "command")
          end, { noremap = true, expr = true })
       end
    end
