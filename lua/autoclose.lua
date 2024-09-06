@@ -23,10 +23,22 @@ local config = {
       ["<CR>"] = { disable_command_mode = true },
       ["<S-CR>"] = { disable_command_mode = true },
    },
+   bidirectional_touch_regex = {
+      ["'"] = { left = "[%w)%]}>']", right = "[%w(%[{<]" },
+      ['"'] = { left = '"', right = '[%w(%[{<]' },
+      ["`"] = { left = "`", right = "[%w(%[{<]" },
+      ["("] = { left = "", right = "[%w(%[{<]" },
+      [")"] = { left = "", right = "[%w(%[{<]" },
+      ["["] = { left = "", right = "[%w(%[{<]" },
+      ["]"] = { left = "", right = "[%w(%[{<]" },
+      ["{"] = { left = "", right = "[%w(%[{<]" },
+      ["}"] = { left = "", right = "[%w(%[{<]" },
+   },
    options = {
       disabled_filetypes = { "text" },
       disable_when_touch = false,
       touch_regex = "[%w(%[{]",
+      bidirectional_disable_when_touch = false,
       pair_spaces = false,
       auto_indent = true,
       disable_command_mode = false,
@@ -100,6 +112,8 @@ local function handler(key, info, mode)
    end
 
    local pair = mode == "insert" and insert_get_pair() or command_get_pair()
+   print("key: " .. key)
+   print("pair: " .. pair)
 
    if (key == "<BS>" or key == "<C-H>" or key == "<C-W>") and is_pair(pair) then
       return "<BS><Del>"
@@ -113,11 +127,28 @@ local function handler(key, info, mode)
       return mode == "insert" and "<C-G>U<Right>" or "<Right>"
    elseif info.close then
       -- disable if the cursor touches alphanumeric character
+      -- ^ this is bogus and doesn't work properly, only works on left side of cursor
       if
          config.options.disable_when_touch
          and (pair .. "_"):sub(2, 2):match(config.options.touch_regex)
       then
          return key
+      end
+
+      -- disable if cursor touches defined characters on either side of cursor
+      if config.bidirectional_touch_regex[key] ~= nil
+      then
+         print("bidirectional_touch_regex[key].left: " .. config.bidirectional_touch_regex[key].left)
+         print("bidirectional_touch_regex[key].right: " .. config.bidirectional_touch_regex[key].right)
+         print("config.options.bidirectional_disable_when_touch: " .. tostring(config.options.bidirectional_disable_when_touch))
+         if config.options.bidirectional_disable_when_touch
+         and (
+            pair:sub(1, 1):match(config.bidirectional_touch_regex[key].left)
+            or (pair .. " "):sub(2, 2):match(config.bidirectional_touch_regex[key].right)
+         )
+         then
+            return key
+         end
       end
 
       -- don't pair spaces
