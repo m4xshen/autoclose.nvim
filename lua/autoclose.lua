@@ -127,7 +127,6 @@ local function handler(key, info, mode)
       return mode == "insert" and "<C-G>U<Right>" or "<Right>"
    elseif info.close then
       -- disable if the cursor touches alphanumeric character
-      -- ^ this is bogus and doesn't work properly, only works on left side of cursor
       if
          config.options.disable_when_touch
          and (pair .. "_"):sub(2, 2):match(config.options.touch_regex)
@@ -136,6 +135,7 @@ local function handler(key, info, mode)
       end
 
       -- disable if cursor touches defined characters on either side of cursor
+      -- regex matching can be set for both sides at the key level
       if config.bidirectional_touch_regex[key] ~= nil
       then
          print("bidirectional_touch_regex[key].left: " .. config.bidirectional_touch_regex[key].left)
