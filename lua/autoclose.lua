@@ -64,6 +64,10 @@ local function is_pair(pair)
 end
 
 local function is_disabled(info)
+   if info.disabled_when and info.disabled_when() then
+      return true
+   end
+
    if config.disabled then
       return true
    end
