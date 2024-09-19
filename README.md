@@ -86,6 +86,7 @@ The available options in `keys`:
 - `disabled_filetypes`: Table of filetypes where the specific key should not be autoclosed.
 - `enabled_filetypes`: Only autoclose the key under these filetypes. This option takes precedence over `disabled_filetypes`.
 - `disable_command_mode`: If set to true, the character will be disabled in command-line mode.
+- `disabled_when`: Function returning true when pair should be disabled.
 
 Example: Add a `$$` pair.
 ```Lua
