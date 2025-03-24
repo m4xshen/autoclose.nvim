@@ -30,20 +30,25 @@ autoclose.nvim
 A minimalist [Neovim](https://neovim.io/) plugin that auto pairs & closes brackets written in 100% Lua.
 
 ## ⚙️ Functions
+
 Most functions work in both insert and command-line mode.
 
 ### Auto-close
+
 <img src="https://user-images.githubusercontent.com/74842863/208931426-4f171094-e1c8-4f85-918a-92250d92c933.gif" width="500"/>
 
 ### Auto-delete
+
 (works in `<BS>` and `<C-W>`)
 
 <img src="https://user-images.githubusercontent.com/74842863/208931458-0ed78f76-0080-4aa9-a36e-e55881090a0c.gif" width="500"/>
 
 ### Auto-escape
+
 <img src="https://user-images.githubusercontent.com/74842863/208931512-6f06036a-267a-42d7-9d3e-58a7ddfab1a6.gif" width="500"/>
 
 ### Auto-indent
+
 (works in `<CR>` and `<S-CR>`, only in insert mode)
 
 <img src="https://user-images.githubusercontent.com/74842863/208931561-b9170d08-0697-49b4-90fb-6d432e03c393.gif" width="500"/>
@@ -57,17 +62,21 @@ Most functions work in both insert and command-line mode.
 ## 📦 Installation
 
 1. Install via your favorite package manager.
+
 - [vim-plug](https://github.com/junegunn/vim-plug)
+
 ```VimL
 Plug 'm4xshen/autoclose.nvim'
 ```
 
 - [packer.nvim](https://github.com/wbthomason/packer.nvim)
+
 ```Lua
 use 'm4xshen/autoclose.nvim'
 ```
 
 2. Setup the plugin in your `init.lua`.
+
 ```Lua
 require("autoclose").setup()
 ```
@@ -81,6 +90,7 @@ You can pass your config table into the `setup()` function.
 The available options in `keys`:
 
 - `close`: If set to true, pressing the character will insert both the opening and closing characters, and place the cursor in between them.
+- `prev`: If set to true, when the `disable_when_touch` is true, will check the character before the cursor. and disable the autoclose function.
 - `escape`: If set to true, pressing the character again will escape it instead of inserting a closing character.
 - `pair`: The string that represents the pair of opening and closing characters. This should be a two-character string, with the opening character first and the closing character second.
 - `disabled_filetypes`: Table of filetypes where the specific key should not be autoclosed.
@@ -88,10 +98,11 @@ The available options in `keys`:
 - `disable_command_mode`: If set to true, the character will be disabled in command-line mode.
 
 Example: Add a `$$` pair.
+
 ```Lua
 require("autoclose").setup({
    keys = {
-      ["$"] = { escape = true, close = true, pair = "$$", disabled_filetypes = {} },
+      ["$"] = { escape = true, prev = false, close = true, pair = "$$", disabled_filetypes = {} },
    },
 })
 ```
@@ -99,10 +110,11 @@ require("autoclose").setup({
 You can also overwrite the default config.
 
 Example: Remove the escape function of `>`.
+
 ```Lua
 require("autoclose").setup({
    keys = {
-      [">"] = { escape = false, close = false, pair = "<>", disabled_filetypes = {} },
+      [">"] = { escape = false, prev = false, close = false, pair = "<>", disabled_filetypes = {} },
    },
 })
 ```
@@ -116,6 +128,7 @@ The available options in `options`:
   - default value: `{ "text" }`
 
 Example: Disable the plugin in text and markdown file.
+
 ```Lua
 require("autoclose").setup({
    options = {
@@ -125,6 +138,7 @@ require("autoclose").setup({
 ```
 
 - `disable_when_touch`: Set this to true will disable the auto-close function when the cursor touches character that matches `touch_regex`.
+
   - type of the value: boolean
   - default value: `false`
 
@@ -135,17 +149,37 @@ require("autoclose").setup({
 Example:
 
 Your current file: ( `^` points to your cursor position)
+
 ```text
 word
 ^
 ```
 
 You press `(` and the file will become
+
 ```
 (word
 ^
 ```
+
 It doesn't autoclose for you because your cursor touches `w`.
+
+if you set keys option `prev` is true
+Your current file: ( `^` points to your cursor position)
+
+```text
+word
+    ^
+```
+
+You press `"` and the file will become
+
+```
+word"
+    ^
+```
+
+It doesn't autoclose for you because your cursor touches `d`.
 
 - `pair_spaces`: Pair the spaces when cursor is inside a pair of `keys`.
   - type of the value: boolean
@@ -166,6 +200,7 @@ import { | }
 ```
 
 - `auto_indent`: Enable auto-indent feature
+
   - type of the value: boolean
   - default value: `true`
 
@@ -178,18 +213,18 @@ import { | }
 ```Lua
 local config = {
    keys = {
-      ["("] = { escape = false, close = true, pair = "()" },
-      ["["] = { escape = false, close = true, pair = "[]" },
-      ["{"] = { escape = false, close = true, pair = "{}" },
+      ["("] = { escape = false, prev = false, close = true, pair = "()" },
+      ["["] = { escape = false, prev = false, close = true, pair = "[]" },
+      ["{"] = { escape = false, prev = false, close = true, pair = "{}" },
 
-      [">"] = { escape = true, close = false, pair = "<>" },
-      [")"] = { escape = true, close = false, pair = "()" },
-      ["]"] = { escape = true, close = false, pair = "[]" },
-      ["}"] = { escape = true, close = false, pair = "{}" },
+      [">"] = { escape = true, prev = false, close = false, pair = "<>" },
+      [")"] = { escape = true, prev = false, close = false, pair = "()" },
+      ["]"] = { escape = true, prev = false, close = false, pair = "[]" },
+      ["}"] = { escape = true, prev = false, close = false, pair = "{}" },
 
-      ['"'] = { escape = true, close = true, pair = '""' },
-      ["'"] = { escape = true, close = true, pair = "''" },
-      ["`"] = { escape = true, close = true, pair = "``" },
+      ['"'] = { escape = true, prev = true, close = true, pair = '""' },
+      ["'"] = { escape = true, prev = true, close = true, pair = "''" },
+      ["`"] = { escape = true, prev = false, close = true, pair = "``" },
    },
    options = {
       disabled_filetypes = { "text" },

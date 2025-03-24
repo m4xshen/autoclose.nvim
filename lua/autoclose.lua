@@ -2,20 +2,20 @@ local autoclose = {}
 
 local config = {
    keys = {
-      ["("] = { escape = false, close = true, pair = "()" },
-      ["["] = { escape = false, close = true, pair = "[]" },
-      ["{"] = { escape = false, close = true, pair = "{}" },
+      ["("] = { escape = false, prev = false, close = true, pair = "()" },
+      ["["] = { escape = false, prev = false, close = true, pair = "[]" },
+      ["{"] = { escape = false, prev = false, close = true, pair = "{}" },
 
-      [">"] = { escape = true, close = false, pair = "<>" },
-      [")"] = { escape = true, close = false, pair = "()" },
-      ["]"] = { escape = true, close = false, pair = "[]" },
-      ["}"] = { escape = true, close = false, pair = "{}" },
+      [">"] = { escape = true, prev = false, close = false, pair = "<>" },
+      [")"] = { escape = true, prev = false, close = false, pair = "()" },
+      ["]"] = { escape = true, prev = false, close = false, pair = "[]" },
+      ["}"] = { escape = true, prev = false, close = false, pair = "{}" },
 
-      ['"'] = { escape = true, close = true, pair = '""' },
-      ["'"] = { escape = true, close = true, pair = "''" },
-      ["`"] = { escape = true, close = true, pair = "``" },
+      ['"'] = { escape = true, prev = true, close = true, pair = '""' },
+      ["'"] = { escape = true, prev = true, close = true, pair = "''" },
+      ["`"] = { escape = true, prev = false, close = true, pair = "``" },
 
-      [" "] = { escape = false, close = true, pair = "  " },
+      [" "] = { escape = false, prev = false, close = true, pair = "  " },
 
       ["<BS>"] = {},
       ["<C-H>"] = {},
@@ -40,6 +40,17 @@ local function insert_get_pair()
    local col = vim.api.nvim_win_get_cursor(0)[2] + 1
 
    return line:sub(col, col + 1)
+end
+
+local function insert_get_prev_pair()
+   local line = vim.api.nvim_get_current_line()
+   local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+
+   if col > 1 then
+      return line:sub(col - 1, col)
+   else
+      return ""
+   end
 end
 
 local function command_get_pair()
@@ -113,11 +124,20 @@ local function handler(key, info, mode)
       return mode == "insert" and "<C-G>U<Right>" or "<Right>"
    elseif info.close then
       -- disable if the cursor touches alphanumeric character
-      if
-         config.options.disable_when_touch
-         and (pair .. "_"):sub(2, 2):match(config.options.touch_regex)
-      then
-         return key
+      if config.options.disable_when_touch then
+         -- if the character followings the cursor is alphanumeric
+         if (pair .. "_"):sub(2, 2):match(config.options.touch_regex) then
+            return key
+         end
+
+         -- if the character before the cursor is alphanumeric
+         local prev_char = insert_get_prev_pair()
+         if
+            info.prev
+            and (prev_char .. "_"):sub(1, 1):match(config.options.touch_regex)
+         then
+            return key
+         end
       end
 
       -- don't pair spaces
