@@ -205,3 +205,7 @@ local config = {
 ### `autoclose.nvim` vs other plugins
 
 Some plugins such as `nvim-autopairs` and `ultimate-autopair.nvim` provide a wider range of features such as fast wrap, treesitter pair checking, etc., but some users may not need all of them. If you just want the basic functionality of editing with pairs, you can use autoclose.nvim to achieve the same thing in a simpler and faster way.
+
+## ⭐ Star History
+
+[![Star History Chart](https://app.repohistory.com/api/svg?repo=m4xshen/autoclose.nvim&type=Date&theme=dark&transparent=false&color=FCE2C6)](https://repohistory.com)
