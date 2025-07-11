@@ -1,4 +1,4 @@
-*autoclose.nvim.txt*         For NVIM v0.8.0         Last change: 2025 July 08
+*autoclose.nvim.txt*         For NVIM v0.8.0         Last change: 2025 July 11
 
 ==============================================================================
 Table of Contents                           *autoclose.nvim-table-of-contents*
@@ -186,7 +186,7 @@ a simpler and faster way.
 
 ⭐ STAR HISTORY                             *autoclose.nvim-⭐-star-history*
 
-<https://repohistory.com>
+<https://app.repohistory.com/star-history>
 
 ==============================================================================
 1. Links                                                *autoclose.nvim-links*
