@@ -139,19 +139,7 @@ local function handler(key, info, mode)
 end
 
 function autoclose.setup(user_config)
-   user_config = user_config or {}
-
-   if user_config.keys ~= nil then
-      for key, info in pairs(user_config.keys) do
-         config.keys[key] = info
-      end
-   end
-
-   if user_config.options ~= nil then
-      for key, info in pairs(user_config.options) do
-         config.options[key] = info
-      end
-   end
+   config = vim.tbl_deep_extend("force", config, user_config or {})
 
    for key, info in pairs(config.keys) do
       vim.keymap.set("i", key, function()
