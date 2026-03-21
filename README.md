@@ -67,14 +67,14 @@ Plug 'm4xshen/autoclose.nvim'
 use 'm4xshen/autoclose.nvim'
 ```
 
-2. Setup the plugin in your `init.lua`.
+2. Setup the plugin in your `init.lua`. (For default settings call `setup` without an argument.)
 ```Lua
 require("autoclose").setup()
 ```
 
 ## 🔧 Configuration
 
-You can pass your config table into the `setup()` function.
+You can pass your config table into the `setup()` function. The table given to `setup()` will be merged with the defaults listed below.
 
 ### Keys
 
@@ -96,13 +96,13 @@ require("autoclose").setup({
 })
 ```
 
-You can also overwrite the default config.
+You can also overwrite the default config. Items not specified remain the default.
 
 Example: Remove the escape function of `>`.
 ```Lua
 require("autoclose").setup({
    keys = {
-      [">"] = { escape = false, close = false, pair = "<>", disabled_filetypes = {} },
+      [">"] = { escape = false },
    },
 })
 ```
