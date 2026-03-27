@@ -67,7 +67,9 @@ local function is_disabled(info)
    if config.disabled then
       return true
    end
-   local current_filetype = vim.api.nvim_buf_get_option(0, "filetype")
+   local current_filetype = vim.fn.has("nvim-0.10.0") == 1
+         and vim.api.nvim_get_option_value("filetype", { buf = 0 })
+      or vim.api.nvim_buf_get_option(0, "filetype")
    for _, filetype in pairs(config.options.disabled_filetypes) do
       if filetype == current_filetype then
          return true
@@ -151,6 +153,9 @@ function autoclose.setup(user_config)
          and not info.disable_command_mode
       then
          vim.keymap.set("c", key, function()
+            vim.schedule(function()
+               vim.cmd("redraw")
+            end)
             return (key == " " and "<C-]>" or "")
                .. handler(key, info, "command")
          end, { noremap = true, expr = true })
